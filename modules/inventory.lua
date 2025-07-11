@@ -58,11 +58,6 @@ return {
       type = "number",
       description = "Maximum number of transfers for abstractInvLib to execute in parallel.",
       default = 100,
-    },
-    logAIL = {
-      type = "boolean",
-      description = "Enable logging for abstractInvLib.",
-      default = false
     }
   },
   dependencies = {
@@ -93,18 +88,7 @@ return {
       end
     end
 
-
-    local ailLogger = setmetatable({}, {
-      __index = function()
-        return function()
-        end
-      end
-    })
-    if log then
-      ailLogger = loaded.logger.interface.logger("inventory", "abstractInvLib")
-    end
-    ailLogger = config.inventory.logAIL.value and ailLogger
-    local storage = require("abstractInvLib")(inventories, nil, { redirect = function(s) ailLogger:debug(s) end })
+    local storage = require("abstractInvLib")(inventories, nil)
     storage.setBatchLimit(config.inventory.executeLimit.value)
     local transferQueue = {}
     local transferTimer
